@@ -8,10 +8,10 @@ import (
 
 	"github.com/urfave/cli/v3"
 
-	"github.com/takumin/boilerplate-golang-cli/internal/command/dummy"
-	"github.com/takumin/boilerplate-golang-cli/internal/config"
-	"github.com/takumin/boilerplate-golang-cli/internal/metadata"
-	"github.com/takumin/boilerplate-golang-cli/internal/version"
+	"github.com/takumin/libreelec-repacker/internal/command/dummy"
+	"github.com/takumin/libreelec-repacker/internal/config"
+	"github.com/takumin/libreelec-repacker/internal/metadata"
+	"github.com/takumin/libreelec-repacker/internal/version"
 )
 
 const (

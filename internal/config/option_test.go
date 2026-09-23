@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/takumin/boilerplate-golang-cli/internal/config"
+	"github.com/takumin/libreelec-repacker/internal/config"
 )
 
 func TestLogLevel(t *testing.T) {

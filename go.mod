@@ -1,4 +1,4 @@
-module github.com/takumin/boilerplate-golang-cli
+module github.com/takumin/libreelec-repacker
 
 go 1.27.1
 

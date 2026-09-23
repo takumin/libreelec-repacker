@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/takumin/boilerplate-golang-cli/internal/command"
+	"github.com/takumin/libreelec-repacker/internal/command"
 )
 
 var osExit = os.Exit
