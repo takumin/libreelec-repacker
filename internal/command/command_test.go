@@ -28,6 +28,7 @@ func TestRun(t *testing.T) {
 		"log-format-text":    {"", "", "", "a -f text", command.ExitOK},
 		"log-format-json":    {"", "", "", "a -f json", command.ExitOK},
 		"log-format-unknown": {"", "", "", "a -f unknown", command.ExitNG},
+		"inspect-no-image":   {"", "", "", "a inspect", command.ExitNG},
 	}
 
 	for name, tt := range cases {
