@@ -24,12 +24,3 @@ func TestLogFormat(t *testing.T) {
 		t.Error("expected config struct to be equal, but got not equal")
 	}
 }
-
-func TestVariable(t *testing.T) {
-	want := &config.Config{Variable: "TEST"}
-	got := &config.Config{}
-	config.Variable("TEST").Apply(got)
-	if !reflect.DeepEqual(want, got) {
-		t.Error("expected config struct to be equal, but got not equal")
-	}
-}

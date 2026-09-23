@@ -5,10 +5,13 @@ import (
 	"fmt"
 	"io"
 	"log/slog"
+	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/urfave/cli/v3"
 
-	"github.com/takumin/libreelec-repacker/internal/command/dummy"
+	"github.com/takumin/libreelec-repacker/internal/command/inspect"
 	"github.com/takumin/libreelec-repacker/internal/config"
 	"github.com/takumin/libreelec-repacker/internal/metadata"
 	"github.com/takumin/libreelec-repacker/internal/version"
@@ -71,7 +74,7 @@ func Main(stdout io.Writer, stderr io.Writer, stdin io.Reader, args []string) in
 	}
 
 	cmds := []*cli.Command{
-		dummy.NewCommands(cfg, flags),
+		inspect.NewCommands(flags),
 	}
 
 	// MEMO: Authors field is invalid in urfave/cli/v3 v3.1.0
@@ -88,7 +91,11 @@ func Main(stdout io.Writer, stderr io.Writer, stdin io.Reader, args []string) in
 		ExitErrHandler:        func(ctx context.Context, cmd *cli.Command, err error) {},
 	}
 
-	ctx := context.Background()
+	// Cancel on interrupt instead of exiting immediately, so that commands
+	// can remove their temporary files before returning.
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
+
 	if err := app.Run(ctx, args); err != nil {
 		slog.ErrorContext(ctx, "failed application", slog.Any("error", err))
 		return ExitNG

@@ -3,7 +3,6 @@ package config
 type Config struct {
 	LogLevel  string
 	LogFormat string
-	Variable  string
 }
 
 func NewConfig(opts ...Option) *Config {
