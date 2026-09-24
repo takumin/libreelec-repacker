@@ -62,9 +62,9 @@ func Main(stdout io.Writer, stderr io.Writer, stdin io.Reader, args []string) in
 			Action: func(ctx context.Context, cmd *cli.Command, s string) error {
 				switch cfg.LogFormat {
 				case "text":
-					slog.SetDefault(slog.New(slog.NewTextHandler(cmd.Writer, nil)))
+					slog.SetDefault(slog.New(slog.NewTextHandler(cmd.ErrWriter, nil)))
 				case "json":
-					slog.SetDefault(slog.New(slog.NewJSONHandler(cmd.Writer, nil)))
+					slog.SetDefault(slog.New(slog.NewJSONHandler(cmd.ErrWriter, nil)))
 				default:
 					return fmt.Errorf("unknown log format: %s", cfg.LogFormat)
 				}
