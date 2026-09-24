@@ -1,3 +1,4 @@
+// Package version reports build version information injected via -ldflags.
 package version
 
 var (

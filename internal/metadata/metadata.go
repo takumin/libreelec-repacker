@@ -1,3 +1,4 @@
+// Package metadata provides the application name, description, and author.
 package metadata
 
 var (
