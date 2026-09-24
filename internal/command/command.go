@@ -1,3 +1,4 @@
+// Package command wires up the CLI application and its subcommands.
 package command
 
 import (

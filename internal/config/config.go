@@ -1,3 +1,4 @@
+// Package config holds application settings built with functional options.
 package config
 
 type Config struct {

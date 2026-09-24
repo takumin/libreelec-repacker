@@ -21,10 +21,8 @@
 
 ## Project Structure
 - `/internal` - All internal code
-- `/internal/command` - CLI command implementation
-- `/internal/config` - Configuration management
-- `/internal/version` - Version information
 - Separate packages by logical concerns
+- Describe each package's role and constraints in its `// Package` doc comment; read it before changing the package
 
 ## Error Handling
 - Return errors with context
