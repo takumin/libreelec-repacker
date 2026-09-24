@@ -31,6 +31,18 @@ func run(args ...string) (string, error) {
 	return stdout.String(), err
 }
 
+// indentJSON re-indents tab-indented JSON with two spaces to match the
+// inspect output, so that expectations can follow .editorconfig.
+func indentJSON(t *testing.T, s string) string {
+	t.Helper()
+
+	var buf bytes.Buffer
+	if err := json.Indent(&buf, []byte(s), "", "  "); err != nil {
+		t.Fatalf("json.Indent: %v", err)
+	}
+	return buf.String()
+}
+
 func TestInspect(t *testing.T) {
 	t.Parallel()
 
@@ -137,31 +149,31 @@ func TestInspectJSON(t *testing.T) {
 		"valid": {
 			path: valid,
 			want: fmt.Sprintf(`{
-  "image": %q,
-  "format": "raw",
-  "size": %d,
-  "partition_table": {
-    "type": "mbr",
-    "partitions": [
-      {
-        "index": 1,
-        "start": 1048576,
-        "size": 16777216,
-        "filesystem": "fat16"
-      },
-      {
-        "index": 2,
-        "start": 17825792,
-        "size": 2097152,
-        "filesystem": "unknown"
-      }
-    ]
-  },
-  "boot": {
-    "partition_index": 1,
-    "system_size": 8,
-    "system_squashfs": true
-  }
+	"image": %q,
+	"format": "raw",
+	"size": %d,
+	"partition_table": {
+		"type": "mbr",
+		"partitions": [
+			{
+				"index": 1,
+				"start": 1048576,
+				"size": 16777216,
+				"filesystem": "fat16"
+			},
+			{
+				"index": 2,
+				"start": 17825792,
+				"size": 2097152,
+				"filesystem": "unknown"
+			}
+		]
+	},
+	"boot": {
+		"partition_index": 1,
+		"system_size": 8,
+		"system_squashfs": true
+	}
 }
 `, valid, layout.Start(2)+mib),
 		},
@@ -169,25 +181,25 @@ func TestInspectJSON(t *testing.T) {
 			path:    invalid,
 			wantErr: true,
 			want: fmt.Sprintf(`{
-  "image": %q,
-  "format": "raw",
-  "size": %d,
-  "partition_table": {
-    "type": "mbr",
-    "partitions": [
-      {
-        "index": 1,
-        "start": 1048576,
-        "size": 16777216,
-        "filesystem": "fat16"
-      }
-    ]
-  },
-  "boot": {
-    "partition_index": 1,
-    "system_size": 4,
-    "system_squashfs": false
-  }
+	"image": %q,
+	"format": "raw",
+	"size": %d,
+	"partition_table": {
+		"type": "mbr",
+		"partitions": [
+			{
+				"index": 1,
+				"start": 1048576,
+				"size": 16777216,
+				"filesystem": "fat16"
+			}
+		]
+	},
+	"boot": {
+		"partition_index": 1,
+		"system_size": 4,
+		"system_squashfs": false
+	}
 }
 `, invalid, invalidLayout.Start(1)+mib),
 		},
@@ -195,21 +207,21 @@ func TestInspectJSON(t *testing.T) {
 			path:    noBoot,
 			wantErr: true,
 			want: fmt.Sprintf(`{
-  "image": %q,
-  "format": "raw",
-  "size": %d,
-  "partition_table": {
-    "type": "mbr",
-    "partitions": [
-      {
-        "index": 1,
-        "start": 1048576,
-        "size": 2097152,
-        "filesystem": "unknown"
-      }
-    ]
-  },
-  "boot": null
+	"image": %q,
+	"format": "raw",
+	"size": %d,
+	"partition_table": {
+		"type": "mbr",
+		"partitions": [
+			{
+				"index": 1,
+				"start": 1048576,
+				"size": 2097152,
+				"filesystem": "unknown"
+			}
+		]
+	},
+	"boot": null
 }
 `, noBoot, noBootLayout.Start(1)+mib),
 		},
@@ -226,8 +238,8 @@ func TestInspectJSON(t *testing.T) {
 			if !json.Valid([]byte(got)) {
 				t.Errorf("output is not valid JSON:\n%s", got)
 			}
-			if got != tt.want {
-				t.Errorf("output mismatch\ngot:\n%s\nwant:\n%s", got, tt.want)
+			if want := indentJSON(t, tt.want); got != want {
+				t.Errorf("output mismatch\ngot:\n%s\nwant:\n%s", got, want)
 			}
 		})
 	}
