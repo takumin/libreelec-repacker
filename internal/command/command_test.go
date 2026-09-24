@@ -2,6 +2,7 @@ package command_test
 
 import (
 	"bytes"
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -43,6 +44,27 @@ func TestRun(t *testing.T) {
 				t.Error("unexpected error:", stdout, stderr)
 			case tt.exit == command.ExitNG && exit == command.ExitOK:
 				t.Error("unexpected error:", stdout, stderr)
+			}
+		})
+	}
+}
+
+// TestLogOutput is not parallel because the log format flag replaces the
+// global default logger.
+func TestLogOutput(t *testing.T) {
+	for _, format := range []string{"text", "json"} {
+		t.Run(format, func(t *testing.T) {
+			var stdout, stderr bytes.Buffer
+			missing := filepath.Join(t.TempDir(), "missing.img")
+			args := []string{"a", "-f", format, "inspect", "-o", "json", missing}
+			if exit := command.Main(&stdout, &stderr, strings.NewReader(""), args); exit != command.ExitNG {
+				t.Fatalf("exit = %d, want %d", exit, command.ExitNG)
+			}
+			if stdout.Len() != 0 {
+				t.Errorf("unexpected stdout:\n%s", stdout.String())
+			}
+			if want := "failed application"; !strings.Contains(stderr.String(), want) {
+				t.Errorf("stderr does not contain %q:\n%s", want, stderr.String())
 			}
 		})
 	}
